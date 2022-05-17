@@ -84,14 +84,17 @@ function moveAliens() {
     }
 
     for (let i = 0; i < aliens.length; i++) {
-        if (aliens[i] > squares.length + width) {
+        if (aliens[i] > (squares.length)) {
             resultsDisplay.innerHTML = 'GAME OVER'
             clearInterval(gameId)
+            // Dead logic
+
         }
     }
     if (kills.length === aliens.length) {
         resultsDisplay.innerHTML = 'YOU WIN'
         clearInterval(gameId)
+        //Next map logic
     }
 
 }
@@ -105,12 +108,15 @@ function fire(e) {
         squares[currentBulletIndex].classList.remove('bullet')
         currentBulletIndex -= width
         squares[currentBulletIndex].classList.add('bullet')
+
         if (squares[currentBulletIndex].classList.contains('alien')) {
             squares[currentBulletIndex].classList.remove('bullet')
             squares[currentBulletIndex].classList.remove('alien')
             squares[currentBulletIndex].classList.add('boom')
+        
             setTimeout(() => squares[currentBulletIndex].classList.remove('boom'), 300)
             clearInterval(bulletId)
+            
             const kill = aliens.indexOf(currentBulletIndex)
             kills.push(kill)
             score++
@@ -122,4 +128,5 @@ function fire(e) {
             bulletId = setInterval(moveBullet, 50)
     }
 }
+
 document.addEventListener('keydown', fire)

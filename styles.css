@@ -1,7 +1,6 @@
 .grid{
     width: 600px;
     height: 600px;
-    border: solid black 1px;
     display: flex;
     flex-wrap: wrap;
 }
@@ -11,18 +10,18 @@
     height:40px;
 }
 .alien{
-    background:url("/img/alien.gif");
+    background:url("./img/alien.gif");
     background-size: cover;
 }
 .player{
-    background:url("/img/player.png");
+    background:url("./img/player.png");
     background-size: cover;
 }
 .bullet{
-    background:url("/img/bullet.png");
+    background:url("./img/bullet.png");
     background-size: cover;
 }
 .boom{
-    background:url("/img/boom.png");
+    background:url("./img/boom.png");
     background-size: cover;
 }

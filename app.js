@@ -1,5 +1,6 @@
 const grid = document.querySelector('.grid')
 const resultsDisplay = document.querySelector('.results')
+const header = document.querySelector('.header')
 let currentPlayerIndex = 202
 let width = 15
 let direction = 1
@@ -7,6 +8,8 @@ let gameId
 let goingRight = true
 let kills = []
 let score = 0
+let alive = true;
+
 
 for (let i = 0; i < 225; i++) {
     const square = document.createElement('div')
@@ -40,16 +43,18 @@ function remove() {
 squares[currentPlayerIndex].classList.add('player')
 
 function movePlayer(e) {
-    squares[currentPlayerIndex].classList.remove('player')
-    switch (e.key) {
-        case 'ArrowLeft':
-            if (currentPlayerIndex % width !== 0) currentPlayerIndex -= 1
-            break
-        case 'ArrowRight':
-            if (currentPlayerIndex % width < width - 1) currentPlayerIndex += 1
-            break
+    if (alive) {
+        squares[currentPlayerIndex].classList.remove('player')
+        switch (e.key) {
+            case 'ArrowLeft':
+                if (currentPlayerIndex % width !== 0) currentPlayerIndex -= 1
+                break
+            case 'ArrowRight':
+                if (currentPlayerIndex % width < width - 1) currentPlayerIndex += 1
+                break
+        }
+        squares[currentPlayerIndex].classList.add('player')
     }
-    squares[currentPlayerIndex].classList.add('player')
 }
 
 document.addEventListener('keydown', movePlayer)
@@ -79,18 +84,25 @@ function moveAliens() {
     draw()
 
     if (squares[currentPlayerIndex].classList.contains('alien', 'shooter')) {
-        resultsDisplay.innerHTML = 'GAME OVER'
+        resultsDisplay.innerHTML='GAME OVER'
+        squares[currentPlayerIndex].classList.remove('player')
+        squares[currentPlayerIndex].classList.add('dead')
+        alive = false;
+        header.classList.add('deadtext')
+        for (let i = 0; i < aliens.length; i++) {
+            squares[aliens[i]].classList.remove('alien')
+        }
         clearInterval(gameId)
+        restart()
     }
 
     for (let i = 0; i < aliens.length; i++) {
         if (aliens[i] > (squares.length)) {
             resultsDisplay.innerHTML = 'GAME OVER'
             clearInterval(gameId)
-            // Dead logic
-
         }
     }
+
     if (kills.length === aliens.length) {
         resultsDisplay.innerHTML = 'YOU WIN'
         clearInterval(gameId)
@@ -102,31 +114,41 @@ function moveAliens() {
 gameId = setInterval(moveAliens, 200)
 
 function fire(e) {
-    let bulletId
-    let currentBulletIndex = currentPlayerIndex
-    function moveBullet() {
-        squares[currentBulletIndex].classList.remove('bullet')
-        currentBulletIndex -= width
-        squares[currentBulletIndex].classList.add('bullet')
-
-        if (squares[currentBulletIndex].classList.contains('alien')) {
+    if (alive) {
+        let bulletId
+        let currentBulletIndex = currentPlayerIndex
+        function moveBullet() {
             squares[currentBulletIndex].classList.remove('bullet')
-            squares[currentBulletIndex].classList.remove('alien')
-            squares[currentBulletIndex].classList.add('boom')
-        
-            setTimeout(() => squares[currentBulletIndex].classList.remove('boom'), 300)
-            clearInterval(bulletId)
-            
-            const kill = aliens.indexOf(currentBulletIndex)
-            kills.push(kill)
-            score++
-            resultsDisplay.innerHTML = score
+            currentBulletIndex -= width
+            squares[currentBulletIndex].classList.add('bullet')
+
+            if (squares[currentBulletIndex].classList.contains('alien')) {
+                squares[currentBulletIndex].classList.remove('bullet')
+                squares[currentBulletIndex].classList.remove('alien')
+                squares[currentBulletIndex].classList.add('boom')
+
+                setTimeout(() => squares[currentBulletIndex].classList.remove('boom'), 300)
+                clearInterval(bulletId)
+
+                const kill = aliens.indexOf(currentBulletIndex)
+                kills.push(kill)
+                score++
+                resultsDisplay.innerHTML = score
+            }
         }
-    }
-    switch (e.key) {
-        case 'ArrowUp':
-            bulletId = setInterval(moveBullet, 50)
+        switch (e.key) {
+            case 'ArrowUp':
+                bulletId = setInterval(moveBullet, 100)
+        }
     }
 }
 
 document.addEventListener('keydown', fire)
+
+function restart() {
+    setTimeout(
+        function () {
+            window.location.href = "./index.html"
+        }, 3000);
+
+}

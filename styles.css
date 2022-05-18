@@ -25,3 +25,19 @@
     background:url("./img/boom.png");
     background-size: cover;
 }
+.dead{
+    background:url("./img/dead.png");
+    background-size: cover;
+}
+.deadtext{
+    background:url("./img/deadtext.png");
+    background-size:contain;
+    background-repeat: no-repeat;
+    justify-content: center;
+}
+body{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
